@@ -1,0 +1,43 @@
+class LRU
+{
+    private:
+        typedef pair<int,int> meta;
+        typedef list<meta>::iterator iter;
+        unorder_map<int,iter> hash_map;
+        list<meta> cache;
+        int cap;
+    public:
+        LRU(int capacity):cap(capacity){}
+        int get(int key)
+        {
+            if(hash_map.count(key))
+            {
+                int value = hash_map[key]->second;
+                cache.erase(hash_map[key]);
+                cache.push_front(make_pair(key,value));
+                hash_map[key] = cache.begin();
+                return value;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        void set(int key, int value)
+        {
+            if(hash_map.count(key))
+            {
+                cache.erase(hash_map[key]);
+            }
+            else
+            {
+                if(cache.size >= cap)
+                {
+                    map.erase(cache.back().first);
+                    cache.pop_back();
+                }
+            }
+            cache.push_front(make_pair(key,value));
+            hash_map[key] = cache.begin();
+        }
+};
